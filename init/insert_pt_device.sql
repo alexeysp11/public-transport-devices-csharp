@@ -1,0 +1,1 @@
+insert into public.pt_device (device_uid, device_type_id) values ('23422', 3); 

@@ -1,3 +1,6 @@
+using PublicTransportDevices.Models;
+using PublicTransportDevices.DbConnections;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<ICommonDbConnection>(x => 
+    ActivatorUtilities.CreateInstance<PgDbConnection>(x, "Server=127.0.0.1;Port=5432;Userid=postgres;Password=postgres;Database=postgres"));
 
 var app = builder.Build();
 

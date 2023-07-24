@@ -19,15 +19,13 @@ for (int i = 0; i < 100; i++)
 {
     Thread thread = new Thread(() => 
     {
-        var maxj = 100; 
+        var maxj = 1000; 
         var rnd = new System.Random(); 
         var dt1 = System.DateTime.Now; 
         for (int j = 0; j < maxj; j++)
         {
-            // string message = "Hello World! thread: " + Thread.CurrentThread.ManagedThreadId; 
             string message = JsonSerializer.Serialize(new DeviceInfo 
                 {
-                    // Uid = Guid.NewGuid().ToString(), 
                     Uid = "3eb20d9f-3350-4bd3-b343-d903d2e51cfb", 
                     GeoCoordinate = new GeoCoordinate
                     {

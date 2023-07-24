@@ -56,7 +56,9 @@ public class DeviceInfoDb
                 var longitude = device.GeoCoordinate.Longitude; 
                 var dtCreated = device.DateTimeCreated.ToString(); 
                 var specificData = System.Text.Json.JsonSerializer.Serialize(device.SpecificData); 
-                string sql = $"select * from public.insert_into_pt_device_info('{uid}', {latitude}, {longitude}, '{dtCreated}', '{specificData}');"; 
+                string sql = @$"
+insert into public.pt_device_info (device_uid, latitude, longitude, datetime_created, specific_data)
+values('{uid}', {latitude}, {longitude}, '{dtCreated}', '{specificData}')"; 
                 _dbConnection.ExecuteSqlCommand(sql); 
             }
         }

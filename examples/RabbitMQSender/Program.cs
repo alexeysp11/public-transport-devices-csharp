@@ -9,7 +9,10 @@ using PublicTransportDevices.Models.Data;
 var factory = new ConnectionFactory { HostName = "localhost" };
 using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();
-channel.ExchangeDeclare(exchange: "test_exchange", type: ExchangeType.Direct);
+
+string exchangeName = "ptd_exchange"; 
+
+channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Direct);
 
 // Send asynchronously 
 for (int i = 0; i < 100; i++)
@@ -30,10 +33,11 @@ for (int i = 0; i < 100; i++)
                     {
                         Latitude = rnd.NextDouble(),
                         Longitude = rnd.NextDouble()
-                    }
+                    }, 
+                    DateTimeCreated = System.DateTime.Now
                 }); 
             var body = Encoding.UTF8.GetBytes(message);
-            channel.BasicPublish(exchange: "test_exchange",
+            channel.BasicPublish(exchange: exchangeName,
                                 routingKey: "",
                                 basicProperties: null,
                                 body: body);

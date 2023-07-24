@@ -1,7 +1,8 @@
 create or replace function insert_into_pt_device_info(
     a_device_uid text,
     a_latitude double precision, 
-    a_longitude double precision)
+    a_longitude double precision, 
+    a_datetime_created varchar(100))
 returns void as 
 $$
 declare
@@ -16,7 +17,7 @@ begin
         return; 
     end if; 
 
-    insert into public.pt_device_info (pt_device_id, latitude, longitude)
-    values (l_pt_device_id, a_latitude, a_longitude); 
+    insert into public.pt_device_info (pt_device_id, latitude, longitude, datetime_created)
+    values (l_pt_device_id, a_latitude, a_longitude, a_datetime_created); 
 end
 $$ language plpgsql;

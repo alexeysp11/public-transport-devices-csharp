@@ -18,25 +18,38 @@ public class RegisterDeviceController : ControllerBase
         _dbConnection = dbConnection; 
     }
 
-    [HttpGet(Name = "GetDevice")]
-    public IEnumerable<Device> Get()
+    [HttpGet(Name = "GetDevices")]
+    public System.Data.DataTable Get()
     {
-        return Enumerable.Range(1, 5).Select(index => new Device
+        var dt = new System.Data.DataTable(); 
+        try
         {
-            Uid = "ewhewoeh"
-        })
-        .ToArray();
+            string sql = "select * from public.pt_device_info;"; 
+            dt = _dbConnection.ExecuteSqlCommand(sql);
+        }
+        catch (System.Exception ex)
+        {
+            System.Console.WriteLine($"Exception: {ex}"); 
+        }
+        return dt; 
     }
 
-    [HttpPost(Name = "Register")]
+    [HttpPost(Name = "RegisterDevices")]
     public void PostRegister([FromBody] List<Device> devices)  
     {
         if (devices == null) 
             return; 
-        foreach (var device in devices)
+        try
         {
-            string sql = $"insert into public.pt_device (device_uid, device_type_id) values ('{device.Uid}', {(int)device.DeviceType}); "; 
-            _dbConnection.ExecuteSqlCommand(sql); 
+            foreach (var device in devices)
+            {
+                string sql = $"insert into public.pt_device (device_uid, device_type_id) values ('{device.Uid}', {(int)device.DeviceType}); "; 
+                _dbConnection.ExecuteSqlCommand(sql); 
+            }
+        }
+        catch (System.Exception ex)
+        {
+            System.Console.WriteLine($"Exception: {ex}"); 
         }
     }
 }

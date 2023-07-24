@@ -12,11 +12,6 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        // Empty: 
-        // 5000 - total: 9.68, average: 0.001936
-        // 1000 - total: 1.920, average: 0.00192
-        // so we can send around 500 empty requests per second 
-
         // Inserting: 
         // 1000 - total: 5:363
         // so we can make 166 to 200 insert requests per second. 

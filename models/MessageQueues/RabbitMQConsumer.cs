@@ -16,13 +16,17 @@ public class RabbitMQConsumer
     private readonly IConnection _connection; 
     private readonly IModel _channel; 
     private readonly Timer _timer; 
+    
+    private readonly string _queueName; 
 
     public RabbitMQConsumer(DeviceInfoDb deviceInfoDb)
     {
+        _queueName = "ptd_queue"; 
+
         var factory = new ConnectionFactory { HostName = "localhost" };
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
-        _channel.QueueDeclare(queue: "hello",
+        _channel.QueueDeclare(queue: _queueName,
                      durable: true,
                      exclusive: false,
                      autoDelete: false,
@@ -56,7 +60,7 @@ public class RabbitMQConsumer
                 DeviceInfo di = JsonSerializer.Deserialize<DeviceInfo>(message);
                 _deviceInfoDb.InsertDeviceInfo(di); 
             };
-            _channel.BasicConsume(queue: "hello",
+            _channel.BasicConsume(queue: _queueName,
                                 autoAck: true,
                                 consumer: consumer);
         }

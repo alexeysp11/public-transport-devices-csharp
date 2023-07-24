@@ -8,7 +8,9 @@ var factory = new ConnectionFactory { HostName = "localhost" };
 using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();
 
-channel.QueueDeclare(queue: "hello",
+string queueName = "ptd_queue"; 
+
+channel.QueueDeclare(queue: queueName,
                      durable: true,
                      exclusive: false,
                      autoDelete: false,
@@ -23,7 +25,7 @@ consumer.Received += (model, ea) =>
     var message = Encoding.UTF8.GetString(body);
     Console.WriteLine($" [x] Received {message}");
 };
-channel.BasicConsume(queue: "hello",
+channel.BasicConsume(queue: queueName,
                      autoAck: true,
                      consumer: consumer);
 

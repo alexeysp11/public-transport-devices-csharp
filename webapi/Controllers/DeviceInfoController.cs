@@ -19,7 +19,22 @@ public class DeviceInfoController : ControllerBase
         _deviceInfoDb = deviceInfoDb; 
     }
 
-    [HttpPost(Name = "DeviceInfo")]
+    [HttpGet(Name = "GetDeviceInfo")]
+    public System.Data.DataTable Get()
+    {
+        var dt = new System.Data.DataTable(); 
+        try
+        {
+            dt = _deviceInfoDb.GetDeviceInfo();
+        }
+        catch (System.Exception ex)
+        {
+            System.Console.WriteLine($"Exception: {ex}"); 
+        }
+        return dt; 
+    }
+
+    [HttpPost(Name = "PostDeviceInfo")]
     public void Post([FromBody] List<DeviceInfo> devices)  
     {
         if (devices == null) 

@@ -35,17 +35,14 @@ public class RegisterDeviceController : ControllerBase
     }
 
     [HttpPost(Name = "RegisterDevices")]
-    public void PostRegister([FromBody] List<Device> devices)  
+    public void PostRegister([FromBody] Device device)  
     {
-        if (devices == null) 
+        if (device == null) 
             return; 
         try
         {
-            foreach (var device in devices)
-            {
-                string sql = $"insert into public.pt_device (device_uid, device_type_id) values ('{device.Uid}', {(int)device.DeviceType}); "; 
-                _dbConnection.ExecuteSqlCommand(sql); 
-            }
+            string sql = $"insert into public.pt_device (device_uid, device_type_id) values ('{device.Uid}', {(int)device.DeviceType}); "; 
+            _dbConnection.ExecuteSqlCommand(sql); 
         }
         catch (System.Exception ex)
         {

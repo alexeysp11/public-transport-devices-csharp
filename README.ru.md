@@ -31,3 +31,57 @@
 ![MessageQueueArchitecture](docs/img/MessageQueueArchitecture.png)
 
 Объяснение, почему выбран данный тип архитектуры, можно прочитать по [ссылке](docs/architecture.ru.md). 
+
+## Реализация 
+
+Имеется два контроллера, у каждого из которых есть GET и POST методы: 
+- GET-метод возвращает объект типа `System.Data.DataTable` (сделано из соображения, что клиентское приложение также будет отображать данные в табличном виде); 
+- POST-метод не возвращает никакого параметра. 
+
+### Как запускать 
+
+1. Настройка базы данных 
+
+В качестве базы данных используется PostgreSQL.
+
+Специфизировать ConnectionString можно в `appsettings.json`:
+
+```JSON
+"AppSettings": {
+    "PostgresConnectionString": "Server=127.0.0.1;Port=5432;Userid=postgres;Password=postgres;Database=postgres"
+}
+```
+
+В папке `init` находятся файлы для того, чтобы (`initpg.sql` - для инициализации таблиц, и `insert_pt_device_info.sql` - для создания функции добавления данных). 
+
+2. Настройка брокера сообщений 
+
+В качестве брокера сообщений используется RabbitMQ.  
+
+### Регистрация устройства с занесением его в базу данных
+
+Регистрация устройства на C#: 
+
+```C#
+var httpClient = new HttpClient(); 
+var url = "https://localhost:7010/RegisterDevice"; 
+var device = new Device 
+    {
+        Uid = "3eb20d9f-3350-4bd3-b343-d903d2e51cfb", 
+        DeviceType = DeviceType.DriverConsole
+    };
+await httpClient.PostAsJsonAsync(url, device); 
+```
+
+Регистрация устройства с помощью JSON (Request URL: `https://localhost:7010/RegisterDevice`): 
+
+```JSON
+{
+  "uid": "3eb20d9f-3350-4bd3-b343-d903d2e51cfb",
+  "deviceType": 2
+}
+```
+
+### Регистрация нового события для конкретного устройства с занесением его в базу данных
+
+По [данной ссылке](docs/insertptdi.ru.md) представлена информация о том, как производится регистрация нового события для конкретного устройства с занесением его в базу данных. 

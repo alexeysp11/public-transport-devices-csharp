@@ -35,13 +35,13 @@ public class DeviceInfoController : ControllerBase
     }
 
     [HttpPost(Name = "PostDeviceInfo")]
-    public void Post([FromBody] List<DeviceInfo> devices)  
+    public void Post([FromBody] DeviceInfo device)  
     {
-        if (devices == null) 
+        if (device == null) 
             return; 
         try
         {
-            _deviceInfoDb.InsertDeviceInfo(devices); 
+            _deviceInfoDb.InsertDeviceInfo(device); 
         }
         catch (System.Exception ex)
         {

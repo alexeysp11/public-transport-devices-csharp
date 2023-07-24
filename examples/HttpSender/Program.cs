@@ -24,18 +24,16 @@ class Program
         var rnd = new System.Random(); 
         for (int i = 0; i < requestCount; i++)
         {
-            var list = new List<DeviceInfo>(); 
-            list.Add(new DeviceInfo 
+            var deviceInfo = new DeviceInfo 
                 {
-                    // Uid = Guid.NewGuid().ToString(), 
                     Uid = "3eb20d9f-3350-4bd3-b343-d903d2e51cfb", 
                     GeoCoordinate = new GeoCoordinate
                     {
                         Latitude = rnd.NextDouble(),
                         Longitude = rnd.NextDouble()
                     }
-                });
-            tasks[i] = httpClient.PostAsJsonAsync(url, list); 
+                };
+            tasks[i] = httpClient.PostAsJsonAsync(url, deviceInfo); 
         }
         
         // 

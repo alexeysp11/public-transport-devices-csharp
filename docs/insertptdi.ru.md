@@ -1,11 +1,8 @@
-﻿using System.Threading;
-using System.Text;
-using System.Text.Json; 
-using RabbitMQ.Client;
-using PublicTransportDevices.Models.Data;
+# Регистрация нового события для конкретного устройства с занесением его в базу данных
 
-// namespace PublicTransportDevices.Examples.RabbitMQSender;
+Через RabbitMQ:
 
+```C#
 var factory = new ConnectionFactory { HostName = "localhost" };
 using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();
@@ -34,8 +31,7 @@ for (int i = 0; i < 100; i++)
                         Latitude = rnd.NextDouble(),
                         Longitude = rnd.NextDouble()
                     }, 
-                    DateTimeCreated = System.DateTime.Now, 
-                    SpecificData = new VehicleValidatorInfo { NumberSuccessful = 12 }
+                    DateTimeCreated = System.DateTime.Now
                 }); 
             var body = Encoding.UTF8.GetBytes(message);
             channel.BasicPublish(exchange: exchangeName,
@@ -58,3 +54,49 @@ for (int i = 0; i < 100; i++)
 Console.ReadLine();
 channel.Close(); 
 connection.Close(); 
+```
+
+Напрямую.
+
+```C#
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        // Inserting: 
+        // 1000 - total: 5:363
+        // so we can make 166 to 200 insert requests per second. 
+
+        // 
+        var httpClient = new HttpClient(); 
+        var requestCount = 1000; 
+        var url = "https://localhost:7010/DeviceInfo"; 
+        var tasks = new Task[requestCount]; 
+        var rnd = new System.Random(); 
+        for (int i = 0; i < requestCount; i++)
+        {
+            var deviceInfo = new DeviceInfo 
+                {
+                    Uid = "3eb20d9f-3350-4bd3-b343-d903d2e51cfb", 
+                    GeoCoordinate = new GeoCoordinate
+                    {
+                        Latitude = rnd.NextDouble(),
+                        Longitude = rnd.NextDouble()
+                    }
+                };
+            tasks[i] = httpClient.PostAsJsonAsync(url, deviceInfo); 
+        }
+        
+        // 
+        var dt1 = System.DateTime.Now; 
+        await Task.WhenAll(tasks); 
+
+        // 
+        var dt2 = System.DateTime.Now; 
+        var dif = dt2 - dt1; 
+        Console.WriteLine($"Started: {dt1}");
+        Console.WriteLine($"Executed: {dt2}");
+        Console.WriteLine($"Executed in: {dif.Seconds}:{dif.Milliseconds}");
+    }
+}
+```

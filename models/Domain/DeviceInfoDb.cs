@@ -51,7 +51,12 @@ public class DeviceInfoDb
         {
             if (device != null && device.GeoCoordinate != null && device.DateTimeCreated != null)
             {
-                string sql = $"select * from public.insert_into_pt_device_info('{device.Uid}', {device.GeoCoordinate.Latitude}, {device.GeoCoordinate.Longitude}, '{device.DateTimeCreated.ToString()}');"; 
+                var uid = device.Uid; 
+                var latitude = device.GeoCoordinate.Latitude; 
+                var longitude = device.GeoCoordinate.Longitude; 
+                var dtCreated = device.DateTimeCreated.ToString(); 
+                var specificData = System.Text.Json.JsonSerializer.Serialize(device.SpecificData); 
+                string sql = $"select * from public.insert_into_pt_device_info('{uid}', {latitude}, {longitude}, '{dtCreated}', '{specificData}');"; 
                 _dbConnection.ExecuteSqlCommand(sql); 
             }
         }

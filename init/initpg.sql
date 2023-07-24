@@ -13,5 +13,6 @@ create table if not exists public.pt_device_info
     pt_device_id integer references public.pt_device (pt_device_id), 
     latitude float8,
     longitude float8, 
-    datetime_created varchar(100)
+    datetime_created varchar(100),
+    specific_data text
 );

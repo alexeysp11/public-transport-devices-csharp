@@ -1,5 +1,6 @@
 using PublicTransportDevices.Models;
 using PublicTransportDevices.DbConnections;
+using PublicTransportDevices.Models.Domain; 
 using PublicTransportDevices.Models.MessageQueues; 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +13,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<ICommonDbConnection>(x => 
     ActivatorUtilities.CreateInstance<PgDbConnection>(x, "Server=127.0.0.1;Port=5432;Userid=postgres;Password=postgres;Database=postgres"));
-builder.Services.AddSingleton(new RabbitMQConsumer()); 
+builder.Services.AddTransient<DeviceInfoDb>(); 
+builder.Services.AddSingleton(new RabbitMQConsumer(builder.Services.BuildServiceProvider().GetRequiredService<DeviceInfoDb>())); 
 
 var app = builder.Build();
 

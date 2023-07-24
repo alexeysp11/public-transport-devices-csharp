@@ -1,7 +1,7 @@
 using System.Collections.Generic; 
 using Microsoft.AspNetCore.Mvc;
-using PublicTransportDevices.DbConnections; 
 using PublicTransportDevices.Models;
+using PublicTransportDevices.Models.Domain; 
 
 namespace PublicTransportDevices.WebApi.Controllers;
 
@@ -10,12 +10,12 @@ namespace PublicTransportDevices.WebApi.Controllers;
 public class DeviceInfoController : ControllerBase
 {
     private readonly ILogger<DeviceInfoController> _logger;
-    private readonly ICommonDbConnection _dbConnection; 
+    private readonly DeviceInfoDb _deviceInfoDb; 
 
-    public DeviceInfoController(ILogger<DeviceInfoController> logger, ICommonDbConnection dbConnection)
+    public DeviceInfoController(ILogger<DeviceInfoController> logger, DeviceInfoDb deviceInfoDb)
     {
         _logger = logger;
-        _dbConnection = dbConnection; 
+        _deviceInfoDb = deviceInfoDb; 
     }
 
     [HttpPost(Name = "DeviceInfo")]
@@ -23,10 +23,13 @@ public class DeviceInfoController : ControllerBase
     {
         if (devices == null) 
             return; 
-        foreach (var device in devices)
+        try
         {
-            string sql = $"select * from public.insert_into_pt_device_info('{device.Uid}', {device.GeoCoordinate.Latitude}, {device.GeoCoordinate.Longitude});"; 
-            _dbConnection.ExecuteSqlCommand(sql); 
+            _deviceInfoDb.InsertDeviceInfo(devices); 
+        }
+        catch (System.Exception ex)
+        {
+            System.Console.WriteLine($"Exception: {ex}"); 
         }
     }
 }

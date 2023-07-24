@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.Json; 
 using RabbitMQ.Client;
-using PublicTransportDevices.Models;
+using PublicTransportDevices.Models.Data;
 
 // namespace PublicTransportDevices.Examples.RabbitMQSender;
 

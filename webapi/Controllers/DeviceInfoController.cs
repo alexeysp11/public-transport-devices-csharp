@@ -1,6 +1,7 @@
 using System.Collections.Generic; 
 using Microsoft.AspNetCore.Mvc;
 using PublicTransportDevices.Models;
+using PublicTransportDevices.Models.Data;
 using PublicTransportDevices.Models.Domain; 
 
 namespace PublicTransportDevices.WebApi.Controllers;

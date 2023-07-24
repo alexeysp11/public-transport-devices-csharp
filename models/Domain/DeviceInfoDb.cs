@@ -1,4 +1,5 @@
 using PublicTransportDevices.DbConnections; 
+using PublicTransportDevices.Models.Data;
 
 namespace PublicTransportDevices.Models.Domain; 
 
@@ -17,13 +18,26 @@ public class DeviceInfoDb
             return; 
         try
         {
+            System.Console.WriteLine($"devices: {devices.Count} in InsertDeviceInfo"); 
             foreach (var device in devices)
             {
-                if (device != null && device.GeoCoordinate != null)
-                {
-                    string sql = $"select * from public.insert_into_pt_device_info('{device.Uid}', {device.GeoCoordinate.Latitude}, {device.GeoCoordinate.Longitude});"; 
-                    _dbConnection.ExecuteSqlCommand(sql); 
-                }
+                InsertDeviceInfo(device); 
+            }
+        }
+        catch (System.Exception ex)
+        {
+            System.Console.WriteLine($"Exception: {ex}"); 
+        }
+    }
+
+    public void InsertDeviceInfo(DeviceInfo device)
+    {
+        try
+        {
+            if (device != null && device.GeoCoordinate != null)
+            {
+                string sql = $"select * from public.insert_into_pt_device_info('{device.Uid}', {device.GeoCoordinate.Latitude}, {device.GeoCoordinate.Longitude});"; 
+                _dbConnection.ExecuteSqlCommand(sql); 
             }
         }
         catch (System.Exception ex)

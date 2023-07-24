@@ -5,22 +5,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using PublicTransportDevices.Models.Data;
 using PublicTransportDevices.Models.Domain; 
 
 namespace PublicTransportDevices.Models.MessageQueues; 
 
 public class RabbitMQConsumer
 {
-    private readonly object _object; 
     private readonly DeviceInfoDb _deviceInfoDb; 
     private readonly IConnection _connection; 
     private readonly IModel _channel; 
     private readonly Timer _timer; 
-    private List<DeviceInfo> _deviceInfo; 
 
     public RabbitMQConsumer(DeviceInfoDb deviceInfoDb)
     {
-        _object = new object(); 
         var factory = new ConnectionFactory { HostName = "localhost" };
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
@@ -50,24 +48,13 @@ public class RabbitMQConsumer
     {
         try
         {
-
-            if (_deviceInfo != null)
-            {
-                lock (_object)
-                {
-                    var array = new DeviceInfo[_deviceInfo.Count];
-                    _deviceInfo.CopyTo(array); 
-                    _deviceInfoDb.InsertDeviceInfo(array.ToList()); 
-                }
-            }
-            _deviceInfo = new List<DeviceInfo>(); 
             var consumer = new EventingBasicConsumer(_channel);
             consumer.Received += (model, ea) =>
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
                 DeviceInfo di = JsonSerializer.Deserialize<DeviceInfo>(message);
-                _deviceInfo.Add(di); 
+                _deviceInfoDb.InsertDeviceInfo(di); 
             };
             _channel.BasicConsume(queue: "hello",
                                 autoAck: true,

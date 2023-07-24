@@ -1,7 +1,7 @@
 using System.Collections.Generic; 
 using Microsoft.AspNetCore.Mvc;
 using PublicTransportDevices.DbConnections; 
-using PublicTransportDevices.Models;
+using PublicTransportDevices.Models.Data;
 
 namespace PublicTransportDevices.WebApi.Controllers;
 
@@ -9,11 +9,6 @@ namespace PublicTransportDevices.WebApi.Controllers;
 [Route("[controller]")]
 public class RegisterDeviceController : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
     private readonly ILogger<RegisterDeviceController> _logger;
     private readonly ICommonDbConnection _dbConnection; 
 

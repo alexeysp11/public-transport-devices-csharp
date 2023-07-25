@@ -12,7 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<ICommonDbConnection>(x => 
-    ActivatorUtilities.CreateInstance<PgDbConnection>(x, "Server=127.0.0.1;Port=5432;Userid=postgres;Password=postgres;Database=postgres"));
+    ActivatorUtilities.CreateInstance<PgDbConnection>(x, builder.Configuration.GetSection("AppSettings")["PostgresConnectionString"]));
 builder.Services.AddTransient<DeviceInfoDb>(); 
 builder.Services.AddSingleton(new RabbitMQConsumer(builder.Services.BuildServiceProvider().GetRequiredService<DeviceInfoDb>())); 
 

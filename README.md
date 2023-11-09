@@ -1,6 +1,26 @@
 # public-transport-devices-csharp
 
-Read this in other languages: [English](README.md), [Russian/Русский](README.ru.md).
+[English](README.md) | [Русский](README.ru.md)
+
+This project involves designing the architecture for a real-time analytics system to handle a high volume of device data, and implementing a prototype server application in C# for data collection and processing.
+
+## Overall description 
+
+### Goal
+
+The goal of the project is to develop the architecture and prototype of a real-time analytics system for collecting and processing data from 20 thousand devices every second, with a focus on sensor and geolocation data.
+
+### Scope
+
+The scope of the project includes proposing a service architecture for the analytics system, implementing a prototype server application in C# for data collection and processing, and considering aspects such as device registration, event handling, and communication protocols.
+
+### Who can use this project
+
+This project can be used by companies or organizations that need to collect, process, and display real-time data from a large number of devices, such as those in the IoT or fleet management industries.
+
+### Possible limitations
+
+Possible limitations of this project could include scalability challenges when dealing with a large number of devices, potential performance bottlenecks in processing real-time data, and the need for robust security measures to protect sensitive device information.
 
 ## Technical requirements
 
